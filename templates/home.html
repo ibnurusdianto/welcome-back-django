@@ -17,31 +17,36 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nama</th>
+                    <th scope="col">Usia</th>
+                    <th scope="col">Photo</th>
+                    <th scope="col">Jabatan</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">No. Telp</th>
+                    <th scope="col">Alamat</th>
+                    <th scope="col">Dibuat Pada</th>
+                    <th scope="col">Diupdate Pada</th>
                 </tr>
             </thead>
             <tbody>
+                {% for emp in employees %}
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{emp.name }}</td>
+                    <td>{{emp.age }}</td>
+                    <td><img src="{{emp.photo.url}}" alt="foto" width="30px" height="30px"></td>
+                    <td>{{emp.designation }}</td>
+                    <td>{{emp.email_address }}</td>
+                    <td>{{emp.phone_number }}</td>
+                    <td>{{emp.address }}</td>
+                    <td>{{emp.created_at }}</td>
+                    <td>{{emp.updated_at }}</td>
                 </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>@social</td>
-                </tr>
+                {% endfor %}
+
+
+
             </tbody>
         </table>
     </div>
@@ -50,6 +55,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
+
 </body>
 
 </html>
