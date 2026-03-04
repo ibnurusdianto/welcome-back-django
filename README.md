@@ -209,3 +209,145 @@ http://localhost:8000/admin/
 di mana kamu bisa login menggunakan akun superuser tersebut dan mengelola data dari apps dan models yang sudah kamu daftarkan.
 
 [![Gemini-Generated-Image-6ne76k6ne76k6ne7.png](https://i.postimg.cc/9FgrWfJS/Gemini-Generated-Image-6ne76k6ne76k6ne7.png)](https://postimg.cc/8jW14T8B)
+
+### Fetch data dari database dan tampilkan dalam tabel di Django
+ 
+Dalam Django, proses menampilkan data dari database ke dalam tabel HTML dilakukan lewat tiga tahap utama: mendefinisikan model, mengambil data di views, lalu merendernya di template.
+
+1. Mendefinisikan model Employee
+
+Pertama, buat model di models.py pada app karyawan:
+
+```python
+from django.db import models
+# Create your models here.
+
+# implementasikan model employee 
+class employee(models.Model):
+    name = models.CharField(max_length=100) # charfield adalah karakter field
+    age = models.IntegerField() # integerfield adalah integer field
+    salary = models.IntegerField() # integerfield adalah integer field
+    photo = models.ImageField(upload_to='photos/') # imagefield adalah image field
+    designation = models.CharField(max_length=100) # charfield adalah karakter field
+    email_address = models.EmailField(max_length=100, unique=True) # emailfield adalah email field
+    phone_number = models.CharField(max_length=15, unique=True) # charfield adalah karakter field
+    address = models.TextField() # textfield adalah text field
+    created_at = models.DateTimeField(auto_now_add=True) # datetimefield adalah datetime field
+    updated_at = models.DateTimeField(auto_now=True) # datetimefield adalah datetime field
+    
+    # untuk menampilkan nama employee di admin
+    def __str__(self):
+        return self.name
+```
+Setelah model dibuat, jalankan:
+```
+python manage.py makemigrations
+python manage.py migrate
+
+```
+Perintah ini akan membuat dan meng-update tabel di database berdasarkan model employee.
+
+[![Gemini-Generated-Image-ujaz1xujaz1xujaz.png](https://i.postimg.cc/tCRKHKRJ/Gemini-Generated-Image-ujaz1xujaz1xujaz.png)](https://postimg.cc/Z0g78Ddz)
+
+2. Fetch data di views.py
+
+Berikut contoh view untuk mengambil semua data karyawan dan mengirimkannya ke template:
+
+```python
+from django.http import HttpResponse
+from django.shortcuts import render
+
+from employess.models import employee
+
+
+def home(request):
+    # ambil semua data dari model Employee
+    employees = employee.objects.all()
+    # print(employees)
+    context = {
+        'employees': employees,
+    }
+    return render(request, 'home.html', context)
+```
+
+Pada kode di atas:
+- employee.objects.all() akan mengambil semua baris data dari tabel employee.
+- Data tersebut dimasukkan ke dalam context dengan key 'employees', yang nantinya bisa diakses di template.
+
+[![Gemini-Generated-Image-zb1etzzb1etzzb1e.png](https://i.postimg.cc/8CCdpbJY/Gemini-Generated-Image-zb1etzzb1etzzb1e.png)](https://postimg.cc/PCBvKYMb)
+
+3. Menampilkan data dalam tabel di template
+
+Di file home.html, gunakan loop for di template untuk menampilkan data dalam bentuk tabel:
+
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <div class="container pt-5">
+        <h1>Hello, world!</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nama</th>
+                    <th scope="col">Usia</th>
+                    <th scope="col">Photo</th>
+                    <th scope="col">Jabatan</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">No. Telp</th>
+                    <th scope="col">Alamat</th>
+                    <th scope="col">Dibuat Pada</th>
+                    <th scope="col">Diupdate Pada</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{emp.name }}</td>
+                    <td>{{emp.age }}</td>
+                    <td><img src="{{emp.photo.url}}" alt="foto" width="30px" height="30px"></td>
+                    <td>{{emp.designation }}</td>
+                    <td>{{emp.email_address }}</td>
+                    <td>{{emp.phone_number }}</td>
+                    <td>{{emp.address }}</td>
+                    <td>{{emp.created_at }}</td>
+                    <td>{{emp.updated_at }}</td>
+                </tr>
+                {% endfor %}
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- <img src="{% static 'img/2.png' %}" alt="test" width="400"> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+```
+
+Beberapa poin penting dari template di atas:
+- employees adalah nama variabel context yang dikirim dari view.
+- {% for emp in employees %} akan melakukan iterasi untuk setiap objek employee.
+- {{ forloop.counter }} menampilkan nomor urut baris mulai dari 1.
+- {{ emp.photo.url }} digunakan untuk mengambil URL file gambar dari field ImageField (pastikan konfigurasi MEDIA_URL dan MEDIA_ROOT sudah benar).
+
+[![Gemini-Generated-Image-h7chneh7chneh7ch.png](https://i.postimg.cc/W1gCmTXf/Gemini-Generated-Image-h7chneh7chneh7ch.png)](https://postimg.cc/87kZNQ8h)
