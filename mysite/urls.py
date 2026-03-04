@@ -16,23 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-# jangan lupa import views
 from . import views
-
-
-"""
-Jika ingin membuat url lainnya berarti harus menambahkan pathnya di dalam list urlpatterns
-dan gunakan modul yang diinginkan
-contoh saya membuat url pattern home dan menyimpannya di dalam module
-views.py dan function home sesuai dengan url pattern yang dibuat
-
-lalu jangan lupa import semua dari module yang dibuat, contoh saya 
-mengimport views
-"""
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # contoh membuat url pattern home 
-    path('', views.home), # homepage 
-    path('about/', views.about), # about page
-]
+    path('', views.home), # homepage
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
