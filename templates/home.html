@@ -33,7 +33,7 @@
                 {% for emp in employees %}
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
-                    <td>{{emp.name }}</td>
+                    <td><a href="{% url 'employee_detail' emp.id %}">{{emp.name }}</a></td>
                     <td>{{emp.age }}</td>
                     <td><img src="{{emp.photo.url}}" alt="foto" width="30px" height="30px"></td>
                     <td>{{emp.designation }}</td>
